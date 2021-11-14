@@ -5,17 +5,27 @@ unit unit2;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, 
-  fpsTypes, fpSpreadsheet, fpspreadsheetgrid, fpsRichTextCtrls;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
+  Spin, RichMemo, fpsTypes, fpSpreadsheet, fpspreadsheetgrid, fpsRichTextCtrls;
 
 type
   
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     Label1: TLabel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpinEdit1: TSpinEdit;
     sWorksheetGrid1: TsWorksheetGrid;
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpinEdit1Change(Sender: TObject);
     procedure sWorksheetGrid1Click(Sender: TObject);
   private
     memo: TsCustomCellRichMemo;
@@ -50,6 +60,56 @@ begin
   memo.Top := sWorksheetgrid1.Top + sWorksheetGrid1.Height + 8;
   memo.Height := 100;
   memo.Width := 400;
+end;
+
+procedure TForm1.SpeedButton1Click(Sender: TObject);
+var
+  fp: TFontParams;
+begin
+  memo.GetTextAttributes(memo.SelStart, fp);
+  if SpeedButton1.Down then
+    fp.Style := fp.Style + [fsBold]
+  else
+    fp.Style := fp.Style - [fsBold];
+  memo.SetTextAttributes(memo.SelStart, memo.SelLength, fp);
+end;
+
+procedure TForm1.SpeedButton2Click(Sender: TObject);
+var
+  fp: TFontParams;
+begin
+  memo.GetTextAttributes(memo.SelStart, fp);
+  if SpeedButton2.Down then
+    fp.Style := fp.Style + [fsItalic]
+  else
+    fp.Style := fp.Style - [fsItalic];
+  memo.SetTextAttributes(memo.SelStart, memo.SelLength, fp);
+end;
+
+procedure TForm1.SpeedButton3Click(Sender: TObject);
+var
+  fp: TFontParams;
+begin
+  memo.GetTextAttributes(memo.SelStart, fp);
+  if SpeedButton3.Down then 
+    fp.Color := clRed
+  else
+    fp.Color := clBlack;
+  memo.SetTextAttributes(memo.SelStart, memo.SelLength, fp);
+end;
+
+procedure TForm1.SpinEdit1Change(Sender: TObject);
+var
+  fp: TFontParams;
+begin
+  memo.GetTextAttributes(memo.SelStart, fp);
+  fp.Size := SpinEdit1.Value;
+  memo.SetTextAttributes(memo.SelStart, memo.SelLength, fp);
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  memo.MemoToCell(sWorksheetGrid1.Worksheet, sWorksheetGrid1.Row-1, sWorksheetGrid1.Col-1);
 end;
 
 procedure TForm1.sWorksheetGrid1Click(Sender: TObject);

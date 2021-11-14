@@ -4,7 +4,7 @@ unit fpsRichTextCtrls;
 
 interface
 
-uses
+uses                      typinfo,   graphics,
   Classes, SysUtils,
   RichMemo,
   fpSpreadsheet, fpsTypes, fpsUtils, fpSpreadsheetCtrls;
@@ -245,7 +245,6 @@ var
   i: Integer;
   fnt: TsFont;
   fp, prevfp: TFontParams;
-  workbook: TsWorkbook;
   worksheet: TsWorksheet;
   s: String;
   rtp: TsRichTextParam;
@@ -260,7 +259,6 @@ begin
     exit;
   
   worksheet := TsWorksheet(ACell^.Worksheet);
-  workbook := TsWorkbook(worksheet);
   
   fnt := worksheet.ReadCellFont(ACell);
   fp := Convert_sFont_to_FontParams(fnt);
@@ -268,11 +266,11 @@ begin
   
   for i := 1 to Length(s) do
   begin
-    GetTextAttributes(i, fp);
-    if SameFontParams(fp, prevfp) or (i = Length(s)) then
+    GetTextAttributes(i-1, fp);
+    if not SameFontParams(fp, prevfp) or (i = Length(s)) then
     begin
       rtp.FirstIndex := i;
-      rtp.FontIndex := workbook.AddFont(
+      rtp.FontIndex := worksheet.WriteFont(ACell, 
         fp.Name, 
         fp.Size, 
         Convert_FontStyle_to_sFontStyle(fp.Style), 
